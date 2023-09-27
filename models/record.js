@@ -12,12 +12,12 @@ const urlModelsSchema = new Schema({
   },
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'User',
     required: true,
   },
   categoryId: {
     type: Schema.Types.ObjectId,
-    ref: 'category',
+    ref: 'Category',
     required: true,
   },
   date: {
