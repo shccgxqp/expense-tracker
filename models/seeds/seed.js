@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
+const bcrypt = require('bcryptjs')
+
 const User = require('../user');
 const Category = require('../category');
 const Record = require('../record');
-const bcrypt = require('bcryptjs')
+
+//連建資料庫字串
 let connectString = process.env.MONGODB_URI
   ? process.env.MONGODB_URI + "/expense-tracker"
   : "mongodb://127.0.0.1:27017/expense-tracker";
@@ -13,8 +16,8 @@ mongoose.connect(connectString, {
   useUnifiedTopology: true,
 })
   .then(async () => {
-    // 创建用户
-    const hash = await bcrypt.hash('12345678', 10)
+    // 創建用戶
+    const hash = await bcrypt.hash('12345678', 10) //加密密碼
     const users = [
       { name: '廣志', email: 'user1@example.com', password: hash },
       { name: '小新', email: 'user2@example.com', password: hash },
@@ -22,7 +25,7 @@ mongoose.connect(connectString, {
 
     const createdUsers = await User.insertMany(users);
 
-    // 创建分类
+    // 創建分類
     const categories = [
       { name: '家居物業' },
       { name: '交通出行' },
@@ -33,7 +36,7 @@ mongoose.connect(connectString, {
 
     const createdCategories = await Category.insertMany(categories);
 
-    // 创建记录
+    // 創建紀錄
     const records = [
       {
         name: '午餐',
