@@ -4,8 +4,9 @@
 
       <div class="d-flex flex-column mt-4">
         {{!-- 選單 --}}
-        <select class="form-select" aria-label="Default select example">
-          <option selected>類別</option>
+        <select class="form-select" aria-label="Default select example" id="category-select">
+          <option value="" disabled hidden>篩選項目</option>
+          <option value="all">所有類別</option>
           <option value="家居物業">家居物業</option>
           <option value="交通出行">交通出行</option>
           <option value="休閒娛樂">休閒娛樂</option>
@@ -32,12 +33,11 @@
         </div>
 
         <div class="d-flex justify-content-end ms-auto">
-          <a href='/restaurant/{{item.id}}' class='btn btn-info me-2'>修改</a>
+          <a href='/edit/{{item.id}}' class='btn btn-info me-2'>修改</a>
           <button type='button' class="btn btn-danger" data-bs-toggle="modal"
             data-bs-target="#deleteConfirmationModal-{{item.id}}">刪除</button>
         </div>
       </div>
-
 
 
       <!-- 刪除模組 -->
@@ -62,9 +62,25 @@
         </div>
       </div>
       {{/each}}
+      <form action="/new" method="GET" style="display:inline;">
+        <button type="submit" class="btn btn-success ">新增支出</button>
+      </form>
+
 
     </div>
 
   </div>
 </div>
 </div>
+
+<script>
+  document.getElementById('category-select').addEventListener('change', function () {
+    const selectedCategory = this.value;
+
+    // 更新导航链接
+    window.location.href = `/?category=${selectedCategory}`;
+  });
+
+  const selectCategory = document.getElementById("category-select");
+  selectCategory.value = '{{selectedCategory}}';
+</script>
