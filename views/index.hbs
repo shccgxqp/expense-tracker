@@ -16,30 +16,32 @@
 
       <div class="d-flex justify-content-between mt-4">
         <p class="fs-2 mt-4 ms-4">總金額</p>
-        <p class="text-warning me-4" style="font-size: 5rem;">25600</p>
+        <p class="text-warning me-4" style="font-size: 5rem;">{{totalAmount}}</p>
       </div>
 
-      {{#each datas as |data|}}
+      {{#each data as |item|}}
+
       <div class=" d-flex align-items-center" style="height: 100px;">
         <div class=" d-flex align-items-center bg-secondary bg-opacity-25" style="width: 400px;">
-          <i class="fa-solid fa-house fa-3x ms-3" style="color: #6f8cbe;"></i>
+          <i class="{{item.icon}} fa-3x ms-3" style="color: #6f8cbe;"></i>
           <div class="p-2 m-0">
-            <p class="fs-4 m-0">{{data.name}}</p>
-            <p class="m-0">{{data.date}}</p>
+            <p class="fs-4 m-0">{{item.name}}</p>
+            <p class="m-0">{{item.date}}</p>
           </div>
-          <p class="fs-2 my-auto ms-auto me-2">{{data.amount}}</p>
+          <p class="fs-2 my-auto ms-auto me-2">{{item.amount}}</p>
         </div>
+
         <div class="d-flex justify-content-end ms-auto">
-          <a href='/restaurant/{{!-- {{restaurant.id}} --}}' class='btn btn-info me-2'>修改</a>
+          <a href='/restaurant/{{item.id}}' class='btn btn-info me-2'>修改</a>
           <button type='button' class="btn btn-danger" data-bs-toggle="modal"
-            data-bs-target="#deleteConfirmationModal-{{!-- {{restaurant.id}} --}}">刪除</button>
+            data-bs-target="#deleteConfirmationModal-{{item.id}}">刪除</button>
         </div>
       </div>
 
 
 
-      {{!-- <!-- 删除确认模态框 -->
-      <div class="modal fade" id="deleteConfirmationModal-{{restaurant.id}}" tabindex="-1"
+      <!-- 刪除模組 -->
+      <div class="modal fade" id="deleteConfirmationModal-{{item.id}}" tabindex="-1"
         aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -48,17 +50,17 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              確定要刪除餐廳 "{{restaurant.name}}" ?
+              確定要刪除 "{{item.name}}"" 金額: {{item.amount}}$ ?
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-              <form action="/restaurant/{{restaurant.id}}?_method=DELETE" method="POST" style="display:inline;">
+              <form action="/{{item.id}}?_method=DELETE" method="POST" style="display:inline;">
                 <button type="submit" class="btn btn-danger">確定刪除</button>
               </form>
             </div>
           </div>
         </div>
-      </div> --}}
+      </div>
       {{/each}}
 
     </div>
