@@ -1,26 +1,40 @@
 const express = require('express')
 const router = express.Router();
+const passport = require('passport')
 
 const Category = require('../models/category')
 const Record = require('../models/record')
 const User = require('../models/user')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
+    //  目前總金額是先加總在分類，如果資料太多會影響伺服器，
+    //  可改兩次查詢，一次只查金額加總，一次分類+略過page*limit
+    //  目前經驗不足，無法判斷哪像查詢結果會影響伺服器
     const selectedCategory = req.query.category === undefined ? 'all' : req.query.category;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = 5
 
+    //  查詢所有資料
     const items = await Record.find({})
       .populate('userId', 'name')
       .populate('categoryId', 'name')
       .exec();
+    //  分類
+    const filteredItems = items
+      .filter(item => selectedCategory === 'all' || item.categoryId.name === selectedCategory);
 
+    // 頁面變數
+    const totalItems = filteredItems.length;
+    const totalPages = Array.from({ length: (Math.ceil(totalItems / limit)) }, (_, index) => index + 1)
+    const previous = page > 1 ? page - 1 : 1;
+    const next = page < totalPages ? page + 1 : totalPages;
 
+    // 資料整理、加總金額
     let totalAmount = 0;
-    const data = items
-      .filter(item => selectedCategory === 'all' || item.categoryId.name === selectedCategory)
+    const data = filteredItems
       .map((item) => {
         totalAmount += item.amount;
-
         return {
           id: item._id,
           icon: selectIcon(item.categoryId.name),
@@ -28,12 +42,13 @@ router.get('/', async (req, res) => {
           amount: item.amount,
           date: item.date.toISOString().slice(0, 10)
         };
-      });
+      }).slice((page - 1) * limit, page * limit);
 
-    res.render('index', { data, totalAmount, selectedCategory });
+    res.render('index', { data, totalAmount, selectedCategory, page, previous, next, totalPages });
   } catch (error) {
     console.error('查詢數據出錯：', error);
-    res.redirect('/');
+    error.errorMessage = '資料取得失敗:(';
+    next(error);
   }
 });
 
@@ -67,7 +82,17 @@ router.get('/edit/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.get('/login', (req, res) => {
+  return res.render('login')
+})
+
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}))
+
+router.post('/', async (req, res, next) => {
   try {
     const { name, amount, categoryName, date } = req.body;
 
@@ -87,11 +112,12 @@ router.post('/', async (req, res) => {
     });
 
     console.log(`新增成功: 名稱:${record.name} 使用者:${user.name} 金額:${record.amount}`);
+    req.flash('success', '新增成功!');
     return res.redirect('/');
   }
   catch (error) {
-    console.log(error)
-    return res.redirect('/')
+    error.errorMessage = '新增失敗:(';
+    next(error);
   }
 
 
@@ -110,7 +136,7 @@ router.delete('/:id', async (req, res) => {
   return res.redirect('/');
 });
 
-router.put('/edit/:id', async (req, res) => {
+router.put('/edit/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
     const { name, date, categoryName, amount } = req.body;
@@ -132,11 +158,12 @@ router.put('/edit/:id', async (req, res) => {
         date: date,
       }
     );
-
+    req.flash('success', '更新成功!');
     return res.redirect('/');
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: '修改錯誤' });
+    error.errorMessage = '更新失敗:(';
+    next(error);
   }
 });
 

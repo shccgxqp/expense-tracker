@@ -5,6 +5,7 @@ const urlModelsSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true
   },
   createdAt: {
     type: Date,

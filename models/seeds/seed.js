@@ -81,3 +81,5 @@ mongoose.connect(connectString, {
     mongoose.connection.close(); // 关闭数据库连接
   })
   .catch(err => console.error(err));
+
+Category.createIndexes({ name: 1 }, { unique: true });
