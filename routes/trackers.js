@@ -79,7 +79,6 @@ router.get('/edit/:id', async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    // 处理错误，例如返回一个错误页面
     res.status(500).send('服务器出错');
   }
 });
@@ -162,7 +161,7 @@ router.put('/edit/:id', async (req, res, next) => {
   }
 });
 
-//  查詢類別
+//  連結類別及icon
 function selectIcon(categoryId) {
   if (categoryId === '家居物業') {
     return "fa-solid fa-house"
@@ -181,7 +180,7 @@ function selectIcon(categoryId) {
 function getCurrentDate() {
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从0开始，需要加1
+  const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;

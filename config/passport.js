@@ -4,7 +4,6 @@ const FacebookStrategy = require('passport-facebook')
 require('dotenv').config()
 
 const bcrypt = require('bcryptjs')
-
 const User = require('../models/user')
 
 // 本土認證
