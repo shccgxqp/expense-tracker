@@ -53,6 +53,7 @@ After creating the app, you will get a Client ID and a Client Secret. Set them i
    ```bash
    FACEBOOK_CLIENT_ID=your_client_id
    FACEBOOK_CLIENT_SECRET=your_client_secret
+   MONGODB_URI=your_mongodb_url
    ```
 
 ### Running-the-App
