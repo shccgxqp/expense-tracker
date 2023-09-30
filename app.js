@@ -3,6 +3,10 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const app = express();
 
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config();
+}
+
 const { engine } = require('express-handlebars')
 const port = 3000;
 
@@ -11,6 +15,7 @@ const connectDB = require("./config/mongoose");
 
 const router = require('./routes');
 const passport = require('./config/passport')
+
 const Handlebars = require('handlebars')
 const messageHandler = require('./middlewares/message-handler');
 const errorHandler = require('./middlewares/error-handler');
