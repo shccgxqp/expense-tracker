@@ -5,6 +5,7 @@ const Category = require('../models/category')
 const Record = require('../models/record')
 const User = require('../models/user')
 
+//  查詢
 router.get('/', async (req, res, next) => {
   try {
     //  目前總金額是先加總在分類，如果資料太多會影響伺服器，
@@ -51,11 +52,13 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+//  新增帳目
 router.get('/new', (req, res) => {
   const currentDate = getCurrentDate()
   return res.render('new', { currentDate })
 })
 
+//  編輯帳目
 router.get('/edit/:id', async (req, res) => {
   try {
     const id = req.params.id;
@@ -81,7 +84,7 @@ router.get('/edit/:id', async (req, res) => {
   }
 });
 
-
+//  新增帳目
 router.post('/', async (req, res, next) => {
   try {
     const { name, amount, categoryName, date } = req.body;
@@ -113,6 +116,7 @@ router.post('/', async (req, res, next) => {
 
 })
 
+//  刪除帳目
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
 
@@ -126,6 +130,7 @@ router.delete('/:id', async (req, res) => {
   return res.redirect('/');
 });
 
+//  更新帳目
 router.put('/edit/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -157,6 +162,7 @@ router.put('/edit/:id', async (req, res, next) => {
   }
 });
 
+//  查詢類別
 function selectIcon(categoryId) {
   if (categoryId === '家居物業') {
     return "fa-solid fa-house"
@@ -171,6 +177,7 @@ function selectIcon(categoryId) {
   }
 }
 
+//  取得當天日期
 function getCurrentDate() {
   const now = new Date();
   const year = now.getFullYear();
